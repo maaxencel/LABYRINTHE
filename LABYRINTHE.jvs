@@ -1,0 +1,843 @@
+
+int deplacement;
+long i,j; //Nécéssaire pour le chrono 
+int xMemoire,yMemoire;; //Coordonnées précédentes du joueur pour la collision 
+int xJoueur=1; //Coordonnées du joueur
+int yJoueur=1;
+int position=0; 
+int valeur=1; //Nécéssaire pour le déplacement
+void main(){
+	//On commence par demander le nom du joueur.
+	//Afin de tester "l'efficacité"  d'un test, on remplace 1 par 8, cela remplacera les cases par du vert.
+	int decision = menu(); //La valeur est le chiffre un ou deux, choix du menu
+	int score = 0; //On passe le score du joueur à 0 car il n'a pas joué
+	if(decision==1) //Si il a choisi 1 -> Jeu
+	{
+		String joueur = readString("Nom du joueur :"); //On demande donc son nom
+		int tableau[][] = new int[19][19]; //On crée le tableau contenant les variables nécéssaires à l'affichage du laby
+		tableau = labyrinthe(); //Le tableau est rempli par la fonction labyrinthe.
+		affichelaby(tableau);//On affiche ensuite le laby, en fonction du tableau précédemment rempli.
+		gotimer(joueur, tableau); //une fois le laby affiché, on lance le chrono
+		 //Une fois le chrono lancé on active les déplacement, qui se font en fonction du laby (évidemment)	
+	}
+	if(decision==2) //Il a choisi d'afficher les meilleurs scores (c'est pour ce qui suit qu'on a initialisé le score a 0).
+	{
+		String joueur = "0"; //On rempli le nom du joueur.
+		highscores(score, joueur);//On envoie le nom et le score (égaux a zéro) à la fonction qui affiche les scores.
+	}
+	if(decision==3)
+	{
+		clear();
+		print("				Labyrinthe ISN");
+		println();
+		println();
+		print("------------------------------- Règles du jeu --------------------------------");
+		println();
+		println();
+		print("Le but est d'arriver à la case bleue en partant de la case rouge");
+		println();
+		print("le plus rapidement possible.");
+		println();
+		print("Utiliser les flèches pour se déplacer.");
+		println();
+		print("Le score est calculé en fonction du temps.");
+		println();
+		println();
+		print("-----------------------------------------------------------------------------");
+	}
+}
+int stoptimer(double a_sec, int a_min) //Fonction qui stoppe le chrono (un petit peu mal placé).
+{
+	for (i=1;i<100000000;i++) //Limite du temps
+	for (j=1;j<100000000;j++)  i++;
+ 
+    //conversation
+double b_sec =  ((System.currentTimeMillis() ) ); //b_sec prend la valeur du temps (en sec et millisec) à l'instant T
+int b_min = (int) ((System.currentTimeMillis() / 1000) / 60); //b_min = le nombre de minutes passées à ce moment.
+ 
+    //resultat 
+    if (b_sec-a_sec>60) //Si le temps total (=temps de la fin - temps du début) est supérieur à 60
+    {a_sec=a_sec-60; //On enlève 60 au nombre de secondes
+    }  
+    double point = (((b_sec-a_sec)+(b_min-a_min)*10)*-0.21)+3800; //Le score qui est calculé à partir du temps que le joueur à mis pour résoudre le laby.
+if (point <0) //La fonction du score diminue quand le temps avance, donc il est possible d'obtenir un score négatif
+{
+	point=1; //Dans ce cas on attribue 1 point symbolique au joueur
+}
+int score = (int) floor(point); //On prend la partie entière du score, en effet le score était calculé en fonction du temps qui était en millisec, donc on enlève les chiffres après la virgule.
+println();
+println();
+print("Temps : "+(b_min-a_min)+" minute(s) et "+((b_sec-a_sec)/1000)+" secondes.");
+println();
+println();
+return(score);
+}
+int menu() //Menu "principal"
+{
+	clear(); 
+	int choix = 0; 
+	print("				Labyrinthe ISN");
+	println();
+	println();
+	print("	Maxence LEBLANC		Stanislas MOLVEAU	Arnaud PRISSET");
+	println();
+	print("-----------------------------------------------------------------------------");
+	println();
+	println();
+	print("-->	1:  Jouer");
+	println();
+	print("-->	2: Highscores");
+	println();
+	print("-->	3: Règles du jeu");
+	println();
+	println();
+	print("-----------------------------------------------------------------------------");
+	while(choix!=1&&choix!=2&&choix!=3) //Tant que le joueur ne met pas un chiffre convenable on continue
+	{
+	choix =readInt("Sélectionnez le sous-menu qui vous convient (1, 2 ou 3).");
+	}
+	return (choix);
+}
+void gotimer(String joueur, int[][] tableau) //Fonction qui lance le chrono
+{
+	  double a_sec =  ((System.currentTimeMillis() )); //Valeur du nombre de secondes (et millisecondes) a cet instant pile.
+       int a_min = (int) ((System.currentTimeMillis() / 1000) / 60); //En minute
+       deplacement(tableau,xJoueur,yJoueur,joueur,a_sec,a_min); //Le chrono est lancé, on va donc 'activer' les déplacements.
+}
+void deplacement(int[][] tableau, int xJoueur, int yJoueur, String joueur, double a_sec, int a_min) //Il est nécéssaire d'envoyer un grand nombre de variables pour les fonctions 'lancée' à la fin de cette dernière.
+{
+	while(valeur==1) //Tant que valeur n'est pas modifiée -> on 'écoute' le clavier
+	{
+	Set_Key_Listener(tableau); //On envoie les coordonnées du tableau pour les collisions.
+	} //La variable valeur est modifiée quand le joueur atteint la fin, on se trouve donc à la fin du laby, il n'est plus possible de se déplacer, il faut donc stopper le chrono
+	int score = stoptimer(a_sec,a_min); //Une fois qu'on a atteint la case = 3 -> on arrête le chrono, et le score est calculé en fonction du temps.
+	highscores(score,joueur); //On envoie le nom et le score (différent de 0 cette fois)
+}
+void Set_Key_Listener(int [][] tableau)//La fonction de déplacement
+	{
+		if(tableau[xJoueur][yJoueur]==0) //Si les coordonnées se situent sur un espace libre
+		{
+		 yMemoire=yJoueur; //On enregistre les coordonnées (car elle vont bientot être modifiées)
+		 xMemoire=xJoueur;
+		}
+		else //Autrement on ne moifie rien
+		{
+		 xMemoire=xMemoire;
+		 yMemoire=yMemoire;
+		}
+ 		setKeyListener (new Runnable() { //Définition d'une activité d'écoute du clavier
+		public void run () {
+		if (equal (getLastKey(),"Haut")) //Si on presse la touche haut
+		{
+		yJoueur=yJoueur +1; //Les coordonnées en sont modifiée (sans vérification pour le moment)
+		position=1; //Ici 1 signifie que la touche haut a été préssée (utile pour effacer l'ancienne position du joueur)
+	}
+		if (equal (getLastKey(),"Bas"))
+		{
+		yJoueur=yJoueur-1;
+		position=2;
+		}
+		if (equal (getLastKey(),"Gauche"))
+		{
+		xJoueur=xJoueur-1;
+		position=3;
+		}
+		if (equal (getLastKey(),"Droite"))
+		{
+		xJoueur=xJoueur+1;
+		position=4;
+		}
+	}});
+	dessin(tableau,xMemoire,yMemoire); //On envoie ensuite les nouvelles coordonnées, celles en mémoire et le laby
+	}
+void dessin(int [][] tableau, int xMemoire, int yMemoire)
+{
+	String color="white";
+	if(tableau[xJoueur][yJoueur]==1) //Si les nouvelles coordonnées sont sur un mur
+	{
+			yJoueur=yMemoire; //On remet les anciennes coordonnées "mémoires"
+			xJoueur=xMemoire;
+	}
+	int xEfface=xJoueur-9; //On passe du tableau à la proglet
+	int yEfface=yJoueur-9; //Il s'agit des anciennes coordonnées du joueur
+	if(position!=0) //Si une touche à bien été préssée
+	{
+	if(position==1)
+	{
+	 	yEfface=yEfface-1; //On modifie les coordonnées du point à effacer en fonction de la touche qui a été préssée
+	}
+	if(position==2)
+	{
+		 yEfface++;
+	}
+	if(position==3)
+	{
+		 xEfface++;
+	}
+	if(position==4)
+	{
+		 xEfface=xEfface-1;
+	}
+	if(tableau[xEfface+9][yEfface+9]==1) //Si à cet endroit il s'agit d'un mur 
+	{
+		color ="black"; //Il sera remplacé par un carré noir (invisible donc)
+	}
+	setPixel(xEfface,yEfface,color); //On affiche le pixel au coordonnées avec la couleur.
+	position=0;
+	deplacement++;
+	}
+	int x=xJoueur-9; //Coordonnées du joueur
+	int y=yJoueur-9;
+	setPixel(x,y,"red"); 
+	if(xJoueur==17&&yJoueur==17) //Si on à atteint le bout
+	{
+		valeur=2; //Entraine la fin du while
+		setPixel(x,y,"white");
+		setPixel(8,8,"green");	
+	}
+}	
+void highscores(int score, String joueur)
+{
+	int rangcinq =250;
+	int rangquatre =800;
+	int rangtrois =1250;
+	int rangdeux =1500;
+	int rangun = 1700;
+	String nomcinq ="Joueur 5";
+	String nomquatre= "Joueur 4";
+	String nomtrois = "Joueur 3";
+	String nomdeux = "Joueur 2";
+	String nomun = "Joueur 1";
+	String nomjoueur = joueur;
+	int point = score;
+	//Score comparé aux références
+	if(point>rangcinq&&point <rangquatre)
+	{
+		rangcinq = point;
+		nomcinq = nomjoueur;
+	}
+	if(point>rangquatre&&point<rangtrois)
+	{
+		rangcinq=rangquatre;
+		rangquatre = point;
+		nomcinq=nomquatre;
+		nomquatre = nomjoueur;
+	}
+	if(point>rangtrois&&point<rangdeux)
+	{
+		rangquatre=rangtrois;
+		rangcinq=rangquatre;
+		rangtrois = point;
+		nomcinq=nomquatre;
+		nomquatre=nomtrois;
+		nomtrois = nomjoueur;
+	}
+	if(point>rangdeux&&point<rangun)
+	{
+		rangtrois=rangdeux;
+		rangquatre=rangtrois;
+		rangcinq=rangquatre;
+		rangdeux= point;
+		nomdeux = nomjoueur;
+		nomtrois=nomquatre;
+		nomquatre=nomtrois;
+		nomcinq=nomquatre;
+	}
+	if(point>rangun)
+	{
+		rangun = point;
+		nomun = nomjoueur;
+		rangdeux=rangun;
+		rangtrois=rangdeux;
+		rangquatre=rangtrois;
+		rangcinq=rangquatre;
+		nomdeux=nomtrois;
+		nomtrois=nomquatre;
+		nomquatre=nomtrois;
+		nomcinq=nomquatre; //Décale le rang de chaque joueur si le joueur a battu leurs scores
+	}
+	clear();
+	println();
+	print("------------HIGHSCORES------------");
+	println();
+	println();
+	print("Premier   : "+nomun+" avec "+rangun+" points");
+	println();
+	print("Second    : "+nomdeux+" avec "+rangdeux+" points");
+	println();
+	print("Troisième : "+nomtrois+" avec "+rangtrois+" points");
+	println();
+	print("Quatrième : "+nomquatre+" avec "+rangquatre+" points");
+	println();
+	println("Cinquième : "+nomcinq+" avec "+rangcinq+ " points");
+	if(point<rangcinq&&point!=0)
+	{
+		println();
+		print("-> "+nomjoueur+" avec "+point+" (hors-classement)");
+	}
+	println();
+	print("Effectué en "+deplacement+" déplacements.");
+	//fin du prog ici.
+}
+void affichelaby(int [][] tableau) //La fonction qui affiche le tableau du laby
+{
+int x=0;
+int y=0;
+reset(10,10);
+String zero = "white";
+String un = "black";
+String deux = "red";
+String trois = "blue";
+String huit = "green";
+while(y!=19)
+{
+	while(x!=19)
+	{
+		if(tableau[x][y]==0) //Case libre
+		{
+			setPixel(x-9,y-9,zero);
+		}
+		if(tableau[x][y]==1)//Mur
+		{
+			setPixel(x-9,y-9,un);
+		}
+		if(tableau[x][y]==2)//Entrée
+		{
+			setPixel(x-9,y-9,deux);
+		}
+		if(tableau[x][y]==3)//Sortie
+		{
+			setPixel(x-9,y-9,trois);
+		}
+		if(tableau[x][y]==8)//Pour tests
+		{
+			setPixel(x-9,y-9,huit);
+		}
+		x++;
+	}
+	x=0;
+	y++;
+}
+}	
+int[][]labyrinthe() //Fonction qui crée le laby
+{
+	int[][]tab = new int[19][19];
+	int x=2;
+	int y=1;
+	while(y!=19)
+	{
+		while(x!=19)
+		{
+			tab[x][y]=0;//libre
+		x++;
+		}
+		x=0;
+		y++;
+	}
+	x=0;
+	y=0;
+	while(y!=1)
+	{
+		while(x!=19)
+		{
+			tab[x][y]=1;//mur
+			x++;
+		}
+		x=0;
+		y++;
+	}
+	x=0;
+	y=1;
+	while(y!=19)
+	{
+		tab[x][y]=1;
+		y++;
+	}
+	x=0;
+	y=y-1;
+	while(y==18)
+	{
+		while(x!=19)
+		{
+			tab[x][y]=1;
+			x++;
+		}
+		x=0;
+		y++;
+	}
+	y=y-1;
+	x=18;
+	while(y!=0)
+	{
+		tab[x][y]=1;
+		y--;
+	}
+	x=0;
+	y=0; 
+	double cplein=0;
+	double cvide=0;
+	double ctot=0;
+	while(y!=19)
+	{
+		while(x!=19)
+		{
+			if(tab[x][y]==1)
+			{
+				cplein++;
+				ctot++;
+			}
+			if(tab[x][y]==0)
+			{
+				cvide++;
+				ctot++;
+			}
+			x++;
+		}
+		x=0;
+		y++;
+	}
+	ctot=ctot+2;
+	double probun = cvide/ctot;
+	double probdeux = cplein/ctot;
+	int memoire = 1;
+	int increment = 0;
+	int prob = 2;
+	double precedent= 0;
+	while(probdeux<0.6)
+	{
+		y=memoire;
+		x=random(prob,18);
+		if(increment ==0)
+		{
+		y++;
+		tab[x][y]=1;
+		increment ++;
+		}
+		if(increment==1)
+		{
+			if(tab[x][y]==0&&tab[x+1][y]==0)
+			{
+				tab[x][y+1]=1;
+			}
+			if(tab[x][y]==0&&tab[x][y+1]==0)
+			{
+				tab[x+1][y]=1;
+				tab[x-1][y]=1;
+				tab[x][y-1]=1;
+			}
+			if(tab[x][y]==0&&tab[x+1][y]==0&&tab[x][y+1]==0)
+			{
+				tab[x][y-1]=1;
+				tab[x+1][y]=1;
+				tab[x-1][y]=1;
+			}
+			if(tab[x][y]==0&&tab[x-1][y]==0)
+			{
+				tab[x+1][y]=1;
+				tab[x][y+1]=1;
+				tab[x][y-1]=1;
+			}
+			if(tab[x][y]==0&&tab[x][y-1]==0)
+			{
+				tab[x-1][y]=1;
+				tab[x][y+1]=1;
+				tab[x+1][y]=1;
+			}
+			y++;
+			if(y==18)
+			{
+				y=0;
+			}
+		}
+		memoire = y;
+		cplein = 0;
+		cvide = 0;
+		ctot = 0;
+		x=0;
+		y=0;
+		while(y!=19)
+	{
+		while(x!=19)
+		{
+			if(tab[x][y]==1)
+			{
+				cplein++;
+				ctot++;
+			}
+			if(tab[x][y]==0)
+			{
+				cvide++;
+				ctot++;
+			}
+			x++;
+		}
+		x=0;
+		y++;
+	}
+	probdeux = cplein/ctot;
+	if(precedent==probdeux)
+	{
+		prob++;
+		if(prob==17)
+		{
+			break;
+		}
+	}
+	precedent = probdeux;
+	}
+	int chance = random (1,4);
+	if(chance==1)
+	{
+		x=2;
+		y=1;
+	}
+	if(chance==2)
+	{
+		x=1;
+		y=2;
+	}
+	if(chance==3)
+	{
+		x=0;
+		y=0;
+		// il y a déja un mur en ces coordonnées, donc il ne se passe rien, j'aurai aussi pu faire z=0 et tab[x][y]=Z
+	}
+	tab[x][y]=1;//debut : pas aléatoire, 3 choix, autant le faire separzement
+	x=1;
+	y=1;
+	//vérification de l'existence d'un chemin : pas de mur infranchissable.
+	
+	while(y!=18)
+	{
+		while(x!=18)
+		{
+			if(tab[x][y]==1&&tab[x+1][y]==1&&tab[x-1][y]==1&&tab[x][y+1]==1&&tab[x][y-1]==1&&x!=17)
+			{
+				tab[x+1][y]=0;
+			}
+			if(tab[x][y]==1&&tab[x-1][y+1]==1&&tab[x+1][y-1]==1)
+			{
+				tab[x][y]=0;
+				tab[x-1][y]=1;
+				//tab[x+1][y]=1;
+			}
+			x++;
+		}
+		x=1;
+		y++;
+	}
+	x=2;
+	y=1;
+	while(y!=17)
+	{
+	while(x!=18)
+	{
+			if(tab[x][y]==0&&tab[x+1][y]==0&&tab[x+2][y]==0&&tab[x-1][y+2]==0)
+			{
+				tab[x][y+1]=1;
+			}
+			if(tab[x][y]==0&&tab[x+1][y]==0&&tab[x+1][y+1]==0&&tab[x-1][y+2]==0)
+			{
+				tab[x][y+1]=1;
+			}
+			if(tab[x][y]==1&&tab[x-1][y+1]==1&&tab[x+1][y+1]==1)
+			{
+				tab[x][y]=0;
+			}
+			x++;
+	}
+	x=2;
+	y++;
+	}
+	// Cette vérif se fait en 2 étapes : ici, vérif de l'absence de "murs".
+	x=2;
+	y=1;
+	int ouverture = 0;
+	while(x!=18)
+	{
+		while(y!=14)
+		{
+			if(tab[x][y]==1&&tab[x][y+1]==1&&tab[x][y+2]==1&&tab[x][y+3]==1&&ouverture!=3)
+			{
+				tab[x][y+2]=0;
+				ouverture++;
+			}
+			if(tab[x][y]==1&&tab[x-1][y+1]==1&&tab[x-1][y+2]==1&&tab[x-1][y+3]==1)
+			{
+				tab[x-1][y+2]=0;
+			}
+			if(tab[x][y]==1&&tab[x][y+1]==1&&tab[x][y+2]==1&&tab[x+1][y+3]==1)
+			{
+				tab[x+1][y+3]=0;
+			}
+			if(tab[x][y]==0&&x==16&&tab[x][y+4]==0)
+			{
+				tab[x][y]=1;
+			}
+			if(tab[x][y]==0&&x==16&&tab[x][y+5]==0)
+			{
+				tab[x][y]=1;
+			}
+			y++;
+		}
+		y=1;
+		x++;
+	}
+	x=1;
+	y=1;
+	while(x!=19)
+	{
+		while(y!=19)
+		{
+			if(tab[x][y]==0&&tab[x-1][y-1]==0&&tab[x-1][y]==0&&tab[x-1][y+1]==0&&tab[x][y-1]==0&&tab[x+1][y-1]==0&&tab[x+1][y]==0&&tab[x+1][y+1]==0&&tab[x][y+1]==0)
+			{
+				tab[x][y]=1;
+			}
+			if(x<17&&x>2&&tab[x][y]==1&&tab[x-1][y]==0&&tab[x+1][y]==0&&tab[x][y+1]==0&&tab[x][y-1]==0&&tab[x-1][y-1]==0&&tab[x+1][y+1]==0&&tab[x-1][y+1]==0)
+			{
+				tab[x-1][y]=1;
+				
+			}
+			
+			y++;
+		}
+		y=1;
+		x++;
+	}
+	x=1;
+	y=1;
+	while(x!=19)
+	{
+		while(y!=17)
+		{
+			
+			if(tab[x][y]==1&&tab[x-1][y+1]==1&&tab[x][y+2]==1)
+			{
+				tab[x-1][y+1]=0;
+			}
+			y++;
+		}
+		y=1;
+		x++;
+	}
+	//Enlever les étoiles pour printer le tableau du laby.
+		/*x=0;
+	y=0;
+	while(y!=19)
+	{
+		while(x!=19)
+		{
+			print(tab[x][y]);
+			x++;
+		}
+		println();
+		x=0;
+		y++;
+	}*/
+	tab[1][1]=2;//entree
+tab[17][17]=3;//sortie
+//Il faut  compliquer le laby, je vais donc fermer des issues.
+int issues = 0;
+x=1;
+y=4;
+int testx=1;
+int testy=1;
+int hauteur = 1;
+while(x!=18)
+{
+	while(y!=18)
+	{
+		if(tab[x][y]==0)
+		{
+			issues++;
+		}
+		y++;
+	}
+	if(issues>10)
+	{
+			while(testy!=18)
+			{
+				if(tab[testx][testy]==0&&tab[testx][testy+1]==0&&tab[testx+1][testy]==0&&tab[testx+1][testy+1]==0)
+				{
+					tab[testx][testy+1]=1;
+				}
+				testy++;
+			}
+	}
+	if(issues>5&&x==16)
+	{
+		while(hauteur!=18)
+		{
+			if(tab[x][hauteur]==0&&tab[x][hauteur-1]==1&&tab[x][hauteur+1]==1&&tab[x-1][hauteur]==1)
+			{
+				tab[x][hauteur]=1;
+			}
+			if(tab[x][hauteur]==0&&tab[x][hauteur-1]==1&&tab[x][hauteur+1]==1&&tab[x-1][hauteur]==0&&tab[x-2][hauteur]==1)
+			{
+				tab[x][hauteur]=1;
+			}
+			if(tab[x][hauteur]==0&&tab[x][hauteur-1]==1&&tab[x][hauteur+1]==1&&tab[x-1][hauteur]==0&&tab[x-2][hauteur]==0&&tab[x-3][hauteur]==1)
+			{
+				tab[x][hauteur]=1;
+			}
+			hauteur++;
+		}
+	}
+	hauteur=1;
+	testy=0;
+	issues=0;	
+	testx++;
+	y=4;
+	x++;
+}
+x=1;
+y=3;
+while(y!=18)
+{
+	while(x!=17)
+	{
+		if(tab[x][y]==1&&tab[x][y+1]==0&&tab[x+1][y]==0&&tab[x+1][y+1]==0&&tab[x+2][y]==1&&tab[x+2][y+1]==0)
+		{
+			tab[x+1][y]=1;
+		}
+		if(tab[x][y]==0&&tab[x][y+1]==1&&tab[x+1][y+1]==1&&tab[x+1][y]==1&&tab[x+1][y-1]==1&&tab[x][y-1]==1)
+		{
+			tab[x][y]=1;
+		}
+		x++;
+	}//y-1
+	x=1;
+	y++;
+}
+x=0;
+y=3;
+//Complétons les points laissés seuls
+while(x!=17)
+{
+	while(y!=18)
+	{
+		if(tab[x][y]==1&&tab[x][y+1]==0&&tab[x][y+2]==1&&tab[x+1][y+1]==1)
+		{
+			tab[x][y+1]=1;
+		}
+		if(tab[x][y]==0&&tab[x-1][y]==1&&tab[x+1][y]==1&&tab[x][y+1]==1)
+		{
+			tab[x][y]=1;
+		}
+		if(tab[x][y]==0&&tab[x-1][y]==1&&tab[x+1][y]==1&&tab[x][y-1]==1)
+		{
+			tab[x][y]=1;
+		}
+		if(tab[x][y]==1&&tab[x][y+1]==0&&tab[x][y+2]==1&&tab[x][y-1]==0&&tab[x+1][y+2]==1&&tab[x+2][y+1]==1)
+		{
+			tab[x][y+1]=1;
+		}
+		
+		
+		y++;
+	}
+	y=1;
+	x++;
+}
+x=0;
+y=0;
+//reste plus que la vérification de l'entrée et de la sortie utillisable.
+if(tab[1][2]==1&&tab[2][2]==1&&tab[3][2]==1&&tab[3][1]==1)
+{
+	tab[2][2]=0;
+}
+if(tab[2][1]==1&&tab[2][2]==1&&tab[2][3]==1&&tab[1][3]==1)
+{
+	tab[2][2]=0;
+}
+if(tab[16][17]==1&&tab[16][16]==1&&tab[16][15]==1&&tab[17][15]==1)
+{
+	tab[16][16]=0;
+}
+if(tab[17][16]==1&&tab[16][16]==1&&tab[15][16]==1&&tab[15][17]==1)
+{
+	tab[16][16]=0;
+}
+if(tab[3][1]==1&&tab[1][3]==1)
+{
+	tab[1][3]=0;
+}
+if(tab[1][2]==1&&tab[2][2]==1)
+{
+	tab[3][1]=0;
+}
+if(tab[2][1]==1&&tab[3][2]==1&&tab[2][3]==1)
+{
+	tab[1][3]=0;
+}
+if(tab[1][2]==0&&tab[1][3]==1&&tab[2][4]==1&&tab[3][4]==1)
+{
+	tab[1][4]=1;
+	tab[2][4]=0;
+}
+if(tab[1][2]==1&&tab[2][2]==1&&tab[3][2]==1&&tab[4][2]==1)
+{
+	tab[3][2]=0;
+}
+if(tab[1][4]==1&&tab[3][1]==1&&tab[2][4]==1&&tab[3][2]==1)
+{
+	tab[3][4]=0;
+}
+if(tab[2][1]==1&&tab[1][3]==1&&tab[2][4]==1&&tab[3][5]==1)
+{
+	tab[2][1]=0;
+}
+if(tab[1][4]==1&&tab[1][5]==1&&tab[2][5]==1&&tab[3][5]==1&&tab[5][4]==1)
+{
+	tab[2][5]=0;
+}
+if(tab[2][6]==1&&tab[1][5]==1&&tab[3][6]==1&&tab[4][6]==1)
+		{
+			tab[2][6]=0;
+		}
+if(tab[2][1]==1&&tab[2][2]==1&&tab[2][3]==1)
+{
+	tab[1][3]=0;		
+}
+if(tab[1][7]==1&&tab[2][7]==1&&tab[3][7]==1&&tab[4][7]==1&&tab[2][6]==0)
+{
+	tab[2][7]=0;
+}
+if(tab[1][7]==1&&tab[2][7]==1&&tab[3][7]==1&&tab[4][7]==1&&tab[3][6]==0)
+{
+	tab[3][7]=0;
+}
+if(tab[1][6]==1&&tab[2][6]==1&&tab[3][6]==1&&tab[4][6]==1&&tab[2][5]==0)
+{
+	tab[2][6]=0;
+}
+if(tab[1][6]==1&&tab[2][6]==1&&tab[3][6]==1&&tab[4][6]==1&&tab[3][5]==0)
+{
+	tab[3][6]=0;
+}
+if(tab[3][3]==1&&tab[4][4]==1&&tab[4][5]==1&&tab[4][6]==1&&tab[4][7]==1)
+{
+	tab[4][5]=0;
+}
+if(tab[2][2]==1&&tab[3][3]==1&&tab[4][4]==1&&tab[5][5]==1)
+{
+	tab[3][3]=0;
+}
+if(tab[1][2]==1&&tab[2][3]==1&&tab[3][3]==1&&tab[3][4]==1&&tab[3][5]==1)
+{
+	tab[3][4]=0;
+}
+if(tab[6][5]==1&&tab[7][4]==1&&tab[5][5]==1&&tab[4][5]==1)
+{
+	tab[5][5]=0;
+}
+if(tab[16][4]==1&&tab[16][5]==1&&tab[16][6]==1&&tab[16][7]==1)
+{
+	tab[16][6]=0;
+}
+if(tab[3][2]==1&&tab[4][3]==1&&tab[2][2]==1&&tab[1][2]==1)
+{
+	tab[2][2]=0;
+}
+		return(tab);
+}

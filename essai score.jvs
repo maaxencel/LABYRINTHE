@@ -1,0 +1,49 @@
+
+/*void main(){
+	openFileReader("sauvenom.txt");
+	int[] sauvenom=new int[5];
+	int x=0;
+	while(x!=4)
+	{
+		sauvenom[x]=readNextCode();
+			x++;
+	}
+	x=0;
+	closeFileWriter("sauvenom.txt");
+	openFileReader("sauvescore.txt");
+	int[] sauvescore=new int[5];
+	while(x!=4)
+	{
+		sauvescore[x]=readNextCode();
+		x++;
+	}
+	closeFileWriter("sauvescore.txt");
+	x=0;
+	while(x!=4)
+	{
+		int c=sauvenom[x];
+		//affiche(char c);
+		print(c);
+		x++;
+	}
+}*/
+//Fonction qui lit les fichiers textes
+void main() {
+	resetConsole();
+    int c;
+    openFileReader("sauvenom.txt");
+    c = readNextCode();
+    while (c != -1) {
+        afficheCodeAuFormatCar(c);
+        c = readNextCode();
+    } // End While
+    closeFileReader();
+    openFileReader("sauvescore.txt");
+    int v;
+    v = readNextCode();
+    while (v != -1) {
+        afficheCodeAuFormatCar(v);
+        v = readNextCode();
+    } // End While
+    closeFileReader();
+}
