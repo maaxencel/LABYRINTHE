@@ -39,8 +39,6 @@ void main(){
   		y++; //Le curseur du tableau avance
   		
   	}
-  	print(sommepremier);
-  	println();
   	//TESTS DIFFERENTS
   	/*print(x);
   	println();
@@ -96,8 +94,6 @@ void main(){
   		y++;
   		compteur++;//On recommence a avancer
   	}
-  	print(sommesecond);
-  	println();
   	/*println();
   	print(scoresecond[0]);
   	println();
@@ -139,8 +135,6 @@ void main(){
   		y++;
   		compteur++; //On réincrémente.
   	}
-  	print(sommetroisieme);
-  	println();
   	/*print(scoretroisieme[0]);
   	println();
   	print(scoretroisieme[1]);
@@ -181,8 +175,6 @@ void main(){
   		y++;
   		compteur++;
   	}
-  	print(sommequatrieme);
-  	println();
   	/*print(scorequatrieme[0]);
   	println();
   	print(scorequatrieme[1]);
@@ -208,13 +200,12 @@ void main(){
   	d=0;
   	puissance=x-1;
   	int sommecinquieme=0;
-  	print(puissance);
-  	println();
   	while(d!=compteur-5)
   	{
   		v=readNextCode();
   		d++;
   	}
+  	print(v);
   	int curseurcinquieme=d+1;
   	while(y<x)
   	{
@@ -225,8 +216,6 @@ void main(){
   		y++;
   		compteur++;
   	}
-  	print(sommecinquieme);
-  	println();
   	//on a les 5 tableaux avec le code ascii de chaque chiffre du score affecté à une case.
    //nommons TEMPORAIREMENT le score du joueur SCOREJOUEUR= 325.
    int scorejoueur= readInt("Score ?");
@@ -236,34 +225,34 @@ int unites = variable%10;*/
 int taille=0; //Variable renseignant la taille du tableau a créer pour le score du joueur.
 if(scorejoueur<10)
 {
-	int unite =scorejoueur;
+	unite =scorejoueur;
 	taille=1;
 }
 if(scorejoueur>=10&&scorejoueur<100)
 {
 double dizaine =(scorejoueur)/10;
-int diz = (int) floor(dizaine);
-int unite = (scorejoueur -(diz*10));
+diz = (int) floor(dizaine);
+unite = (scorejoueur -(diz*10));
 taille=2;
 }
 if(scorejoueur>=100&&scorejoueur<1000)
 {
 double centaine = scorejoueur/100;
-int cent = (int) floor(centaine);
+cent = (int) floor(centaine);
 double dizaine =(scorejoueur -(cent*100))/10;
-int diz = (int) floor(dizaine);
-int unite = (scorejoueur -((cent*100)+(diz*10)));
+diz = (int) floor(dizaine);
+unite = (scorejoueur -((cent*100)+(diz*10)));
 taille=3;
 }
 if(scorejoueur>1000)
 {
 double millier = scorejoueur/1000;
-int mil = (int) floor(millier);
+mil = (int) floor(millier);
 double centaine = (scorejoueur-(mil*1000))/100;
-int cent = (int) floor(centaine);
+cent = (int) floor(centaine);
 double dizaine =(scorejoueur -((mil*1000)+(cent*100)))/10;
-int diz = (int) floor(dizaine);
-int unite = (scorejoueur -((mil*1000)+(cent*100)+(diz*10)));
+diz = (int) floor(dizaine);
+unite = (scorejoueur -((mil*1000)+(cent*100)+(diz*10)));
 taille=4;
 }
 int[] tabjoueur = new int[taille];
@@ -294,20 +283,18 @@ if(scorejoueur>1000)
 int curseur=0;
 int sommejoueur=0;
 puissance=taille-1;
-while(curseur!=taille-1) //On aurait pu utiliser la variable puissance, mais ce ne serait pas logique.
+while(curseur!=taille) //On aurait pu utiliser la variable puissance, mais ce ne serait pas logique.
 {
 	tabjoueur[curseur]=tabjoueur[curseur]+48; //Conversion en ascii relativement simple car 0 = 48 en ascii, on ajoute donc 48 au chiffre car les chiffres se 'suivent' sur la table de caractères ascii.
 	curseur++;
 }
 curseur=0;
-while(curseur<taille-1) //On obtient le score de la même manière que les 5 précédents
+while(curseur<taille) //On obtient le score de la même manière que les 5 précédents
 {
 	sommejoueur=(sommejoueur+(tabjoueur[curseur]*10^puissance));
   		puissance=puissance-1;
   		curseur++;
 }
-print(sommejoueur);
-println();
 //On a maintenant de quoi comparer les scores.
 closeFileReader();
 int s=0;
@@ -317,35 +304,39 @@ if(sommejoueur>sommecinquieme&&sommejoueur <sommequatrieme)//Donc il est cinquie
 		//On ecrit tout normal sauf le cinquième
 		while(s<taillepremier)
 		{
-		writeNextCode(scorepremier[s]-48);
+		writeNextCode(scorepremier[s]);
 		s++;
 		}
-		writeNextCode('\n');
+		writeNextCode(13);
+		writeNextCode(10);
 		s=0;
 		while(s<taillesecond)
 		{
-			writeNextCode(scoresecond[s]-48);
+			writeNextCode(scoresecond[s]);
 			s++;
 		}
-		writeNextCode('\n');
+		writeNextCode(13);
+		writeNextCode(10);
 		s=0;
 		while(s<tailletroisieme)
 		{
-			writeNextCode(scoretroisieme[s]-48);
+			writeNextCode(scoretroisieme[s]);
 			s++;
 		}
-		writeNextCode('\n');
+		writeNextCode(13);
+		writeNextCode(10);
 		s=0;
 		while(s<taillequatrieme)
 		{
-			writeNextCode(scorequatrieme[s]-48);
+			writeNextCode(scorequatrieme[s]);
 			s++;
 		}
-		writeNextCode('\n');
+		writeNextCode(13);
+		writeNextCode(10);
 		s=0;
 		while(s<taille)
 		{
-			writeNextCode(tabjoueur[s]-48);
+			writeNextCode(tabjoueur[s]);
 			s++;
 		}
 		s=0;
