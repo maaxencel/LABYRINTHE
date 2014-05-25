@@ -276,7 +276,10 @@ void highscores(int score, String joueur)
 		print("-> "+nomjoueur+" avec "+point+" (hors-classement)");
 	}
 	println();
+	if(deplacement!=0)
+	{
 	print("Effectué en "+deplacement+" déplacements.");
+	}
 	//fin du prog ici.
 }
 void affichelaby(int [][] tableau) //La fonction qui affiche le tableau du laby
