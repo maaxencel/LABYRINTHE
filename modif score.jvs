@@ -30,19 +30,25 @@ void main(){
   	openFileReader("sauvescore.txt"); //On recommence au début du doc.
   	int sommepremier=0;
   	int puissance=x-1;
+  	int puissancemem=puissance;
   	while(y<x) //Tant que le curseur du tableau n'atteint pas le bout du tableau
   	{
   		v=readNextCode(); //On avance
   		scorepremier[y]=v; //Et on met au tableau le code de la lettre
   		//A propos des sommes : je somme en additionnant chaque nombre du chiffre à la puissance de son rang
   		//Exemple : 123 --> 1^2 + 2^1 +3^0.
-  		//Problème : le dernier nombre vaut 1
+  		//Problème : à cause des puissances, tout chiffre ayant les unités (et centaines)
+  		//mais l'unité différente auront la même valeur de somme..
+  		//Solution : On ajoute a la somme le plus 'haut' chiffre du score *puissance
+  		//Ex : 211 -> somme +2*3; 54->somme+5*2;
   		sommepremier=(sommepremier+(scorepremier[y]*10^puissance));
   		puissance=puissance-1;
   		y++; //Le curseur du tableau avance
   		
   	}
-  	print(puissance);
+  	//A la fin de la boucle , puissance =-1 mais la calcul est effectué avant la décrementation donc pas grave.
+  	y=y-1;
+  	sommepremier=(sommepremier+(scorepremier[0]*puissancemem));
   	//TESTS DIFFERENTS
   	/*print(x);
   	println();
@@ -82,6 +88,7 @@ void main(){
   	openFileReader("sauvescore.txt");
   	int sommesecond=0;
   	puissance=x-1;
+  	puissancemem=puissance;
   	int d=0; //On a fermé le fichier, on est donc revenu au tout départ du fichier, on veut maintenant avancer jusqu'au début du second 'mot'
   	while(d!=compteur-2) //-2 car il y a un 'caractère ascii' pour le saut de ligne, et un pour le début de ligne
   	{
@@ -98,6 +105,8 @@ void main(){
   		y++;
   		compteur++;//On recommence a avancer
   	}
+  	y=y-1;
+  	sommesecond=(sommesecond+(scoresecond[0]*puissancemem));
   	/*println();
   	print(scoresecond[0]);
   	println();
@@ -124,6 +133,7 @@ void main(){
   	d=0;
   	int sommetroisieme=0;
   	puissance=x-1;
+  	puissancemem=puissance;
   	while(d!=compteur-3)
   	{
   		v=readNextCode();
@@ -139,6 +149,8 @@ void main(){
   		y++;
   		compteur++; //On réincrémente.
   	}
+  	y=y-1;
+  	sommetroisieme=(sommetroisieme+(scoretroisieme[0]*puissancemem));
   	/*print(scoretroisieme[0]);
   	println();
   	print(scoretroisieme[1]);
@@ -163,6 +175,7 @@ void main(){
   	openFileReader("sauvescore.txt");
   	d=0;
   	puissance=x-1;
+  	puissancemem=puissance;
   	int sommequatrieme=0;
   	while(d!=compteur-4)
   	{
@@ -179,6 +192,8 @@ void main(){
   		y++;
   		compteur++;
   	}
+  	y=y-1;
+  	sommequatrieme=(sommequatrieme+(scorequatrieme[0]*puissancemem));
   	/*print(scorequatrieme[0]);
   	println();
   	print(scorequatrieme[1]);
@@ -203,6 +218,9 @@ void main(){
   	openFileReader("sauvescore.txt");
   	d=0;
   	puissance=x-1;
+  	puissancemem=puissance;
+  	print(puissancemem);
+  	println();
   	int sommecinquieme=0;
   	while(d!=compteur-4)
   	{
@@ -219,6 +237,8 @@ void main(){
   		y++;
   		compteur++;
   	}
+  	y=y-1;
+  	sommecinquieme=(sommecinquieme+(scorecinquieme[0]*puissancemem));
   	//on a les 5 tableaux avec le code ascii de chaque chiffre du score affecté à une case.
    int scorejoueur= readInt("Score ?");
    /*int variable = 32;
@@ -285,6 +305,9 @@ if(scorejoueur>1000)
 int curseur=0;
 int sommejoueur=0;
 puissance=taille-1;
+puissancemem=puissance;
+print(puissancemem);
+println();
 while(curseur!=taille) //On aurait pu utiliser la variable puissance, mais ce ne serait pas logique.
 {
 	tabjoueur[curseur]=tabjoueur[curseur]+48; //Conversion en ascii relativement simple car 0 = 48 en ascii, on ajoute donc 48 au chiffre car les chiffres se 'suivent' sur la table de caractères ascii.
@@ -296,18 +319,18 @@ print(tabjoueur[1]);*/
 curseur=0;
 while(curseur<taille) //On obtient le score de la même manière que les 5 précédents
 {
-	sommejoueur=(sommejoueur+(tabjoueur[curseur]*10^puissance));
+	sommejoueur=(sommejoueur+(tabjoueur[taille-(curseur+1)]*10^puissance));
   		puissance=puissance-1;
   		curseur++;
 }
+curseur=curseur-1;
+sommejoueur=(sommejoueur+(tabjoueur[taille-1]*puissancemem));
 //On a maintenant de quoi comparer les scores.
 closeFileReader();
 int s=0;
-/*print(sommepremier);
+print(sommepremier);
 println();
 print(sommesecond);
-println();
-print(sommepremier);
 println();
 print(sommetroisieme);
 println();
@@ -316,8 +339,7 @@ println();
 print(sommecinquieme);
 println();
 println();
-print(sommejoueur);*/
-sommejoueur=sommejoueur-1;
+print(sommejoueur);
 openFileWriter("sauvescore.txt"); //Arrêt de la lecture et début de l'écriture.
 if(sommejoueur>sommecinquieme&&sommejoueur <sommequatrieme)//Donc il est cinquieme
 	{
