@@ -319,7 +319,6 @@ openFileWriter("sauvescore.txt"); //Arrêt de la lecture et début de l'écriture.
 if(sommejoueur>sommecinquieme&&sommejoueur <sommequatrieme)//Donc il est cinquieme
 	{
 		//On ecrit tout normal sauf le cinquième
-		print("bon passage");
 		while(s<taillepremier)
 		{
 		writeNextCode(scorepremier[s]);
@@ -354,7 +353,8 @@ if(sommejoueur>sommecinquieme&&sommejoueur <sommequatrieme)//Donc il est cinquie
 		s=0;
 		while(s<taille)
 		{
-			writeNextCode(tabjoueur[s]);
+			int curseurjoueur=taille-(s+1);
+			writeNextCode(tabjoueur[curseurjoueur]);
 			s++;
 		}
 		s=0;
