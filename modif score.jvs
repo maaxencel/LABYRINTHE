@@ -300,10 +300,25 @@ while(curseur<taille) //On obtient le score de la même manière que les 5 précéde
 //On a maintenant de quoi comparer les scores.
 closeFileReader();
 int s=0;
+/*print(sommepremier);
+println();
+print(sommesecond);
+println();
+print(sommepremier);
+println();
+print(sommetroisieme);
+println();*/
+print(sommequatrieme);
+println();
+print(sommecinquieme);
+println();
+println();
+print(sommejoueur);
 openFileWriter("sauvescore.txt"); //Arrêt de la lecture et début de l'écriture.
 if(sommejoueur>sommecinquieme&&sommejoueur <sommequatrieme)//Donc il est cinquieme
 	{
 		//On ecrit tout normal sauf le cinquième
+		print("bon passage");
 		while(s<taillepremier)
 		{
 		writeNextCode(scorepremier[s]);
