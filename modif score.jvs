@@ -297,7 +297,6 @@ while(curseur<taille) //On obtient le score de la même manière que les 5 précéde
   		puissance=puissance-1;
   		curseur++;
 }
-print(sommejoueur);
 //On a maintenant de quoi comparer les scores.
 closeFileReader();
 int s=0;
