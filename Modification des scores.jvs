@@ -41,11 +41,17 @@ while(y<x) //Tant que le curseur du tableau n'atteint pas le bout du tableau
   		//Solution : On ajoute a la somme le plus 'haut' chiffre du score *puissance
   		//Ex : 211 -> somme +(2*3)|| 54->somme+5*2;
   		//Permet une différenciation des sommes avec une précision de 3 points
-  		sommepremier=(sommepremier+(scorepremier[y]*10^puissance));
-  		puissance=puissance-1;
   		y++; //Le curseur du tableau avance	
   	}
   	//A la fin de la boucle , puissance =-1 mais la calcul est effectué avant la décrementation donc sans importance.
+y=0;
+while(y<x)
+{
+	int puissancepremier=(int)Math.pow(10,puissance);
+	sommepremier=(sommepremier+(scorepremier[y]*puissancepremier));
+	puissance=puissance-1;
+	y++;  	
+}
 y=y-1;
 sommepremier=(sommepremier+(scorepremier[0]*puissancemem));
   	//TESTS DIFFERENTS
@@ -91,11 +97,17 @@ while(y<x) //Maintenant revenu au début du mot, tant que le curseur du tableau n
   	{
   		v=readNextCode(); //On avance
   		scoresecond[y]=v;//En mettant au tableau cette valeur
-  		sommesecond=(sommesecond+(scoresecond[y]*10^puissance));
-  		puissance=puissance-1;
   		y++;
   		compteur++;//On recommence a avancer
   	}
+y=0;
+while(y<x)
+{
+	int puissancesecond=(int)Math.pow(10,puissance);
+	sommesecond=(sommesecond+(scoresecond[y]*puissancesecond));
+  	puissance=puissance-1;
+  	y++; 	
+}
 y=y-1;
 sommesecond=(sommesecond+(scoresecond[0]*puissancemem));
   	/*println();
@@ -135,11 +147,17 @@ while(y<x)
   	{
   		v=readNextCode();
   		scoretroisieme[y]=v;
-  		sommetroisieme=(sommetroisieme+(scoretroisieme[y]*10^puissance));
-  		puissance=puissance-1;
   		y++;
   		compteur++; //On réincrémente.
   	}
+y=0;
+while(y<x)
+{
+	int puissancetroisieme=(int)Math.pow(10,puissance);
+	sommetroisieme=(sommetroisieme+(scoretroisieme[y]*puissancetroisieme));
+  	puissance=puissance-1;  
+  	y++;	
+}
 y=y-1;
 sommetroisieme=(sommetroisieme+(scoretroisieme[0]*puissancemem));
   	/*print(scoretroisieme[0]);
@@ -178,10 +196,16 @@ int curseurquatrieme=d+1;
   	{
   		v=readNextCode();
   		scorequatrieme[y]=v;
-  		sommequatrieme=(sommequatrieme+(scorequatrieme[y]*10^puissance));
-  		puissance=puissance-1;
   		y++;
   		compteur++;
+  	}
+  	y=0;
+  	while(y<x)
+  	{
+  		int puissancequatrieme=(int)Math.pow(10,puissance);
+  		sommequatrieme=(sommequatrieme+(scorequatrieme[y]*puissancequatrieme));
+  		puissance=puissance-1;
+  		y++;
   	}
 y=y-1;
 sommequatrieme=(sommequatrieme+(scorequatrieme[0]*puissancemem));
@@ -221,15 +245,21 @@ int curseurcinquieme=d+1;
   	{
   		v=readNextCode();
   		scorecinquieme[y]=v;
-  		sommecinquieme=(sommecinquieme+(scorecinquieme[y]*10^puissance));
-  		puissance=puissance-1;
   		y++;
   		compteur++;
+  	}
+  	y=0;
+  	while(y<x)
+  	{
+  		int puissancecinquieme=(int)Math.pow(10,puissance);
+  		sommecinquieme=(sommecinquieme+(scorecinquieme[y]*puissancecinquieme));
+  		puissance=puissance-1;
+  		y++;
   	}
 y=y-1;
 sommecinquieme=(sommecinquieme+(scorecinquieme[0]*puissancemem));
   	//on a les 5 tableaux avec le code ascii de chaque chiffre du score affecté à une case.
-int scorejoueur= readInt("Score ? (+ de 3 pts d'écart avec un joueur svp)");
+int scorejoueur= readInt("Score ?");
 int taille=0; //Variable renseignant la taille du tableau a créer pour le score du joueur.
 if(scorejoueur<10)
 {
@@ -301,9 +331,10 @@ while(curseur!=taille) //On aurait pu utiliser la variable puissance, mais ce ne
 println();
 print(tabjoueur[1]);*/
 curseur=0;
-while(curseur<=taille-1) //On obtient le score de la même manière que les 5 précédents
+while(curseur<taille) //On obtient le score de la même manière que les 5 précédents
 {
-		sommejoueur=(sommejoueur+(tabjoueur[taille-(curseur+1)]*10^puissance));
+	int puissancejoueur=(int)Math.pow(10,puissance);
+		sommejoueur=(sommejoueur+(tabjoueur[taille-(curseur+1)]*puissancejoueur));
   		puissance=puissance-1;
   		curseur++;
 }
@@ -312,7 +343,7 @@ sommejoueur=sommejoueur+(tabjoueur[curseur]*puissancemem);
 //On a maintenant de quoi comparer les scores.
 closeFileReader();
 int s=0;
-/*print(sommepremier);
+print(sommepremier);
 println();
 print(sommesecond);
 println();
@@ -323,8 +354,48 @@ println();
 print(sommecinquieme);
 println();
 println();
-print(sommejoueur);*/
+print(sommejoueur);
 openFileWriter("sauvescore.txt"); //Arrêt de la lecture et début de l'écriture.
+if(sommejoueur<sommecinquieme)
+{ //Réecriture normale du fichier
+	while(s<taillepremier)
+		{
+			writeNextCode(scorepremier[s]);
+			s++;
+		}
+	writeNextCode(13);
+	writeNextCode(10);
+	s=0;
+	while(s<taillesecond)
+		{
+			writeNextCode(scoresecond[s]);
+			s++;
+		}
+	writeNextCode(13);
+	writeNextCode(10);
+	s=0;
+	while(s<tailletroisieme)
+		{
+			writeNextCode(scoretroisieme[s]);
+			s++;
+		}
+	writeNextCode(13);
+	writeNextCode(10);
+	s=0;
+	while(s<taillequatrieme)
+		{
+			writeNextCode(scorequatrieme[s]);
+			s++;
+		}
+	writeNextCode(13);
+	writeNextCode(10);
+	s=0;
+	while(s<taillecinquieme)
+	{
+		writeNextCode(scorecinquieme[s]);
+		s++;
+	}
+}
 if(sommejoueur>sommecinquieme&&sommejoueur <sommequatrieme)//Donc il est cinquieme
 	{
 		//On ecrit tout normal sauf le cinquième
