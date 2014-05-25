@@ -34,11 +34,15 @@ void main(){
   	{
   		v=readNextCode(); //On avance
   		scorepremier[y]=v; //Et on met au tableau le code de la lettre
+  		//A propos des sommes : je somme en additionnant chaque nombre du chiffre à la puissance de son rang
+  		//Exemple : 123 --> 1^2 + 2^1 +3^0.
+  		//Problème : le dernier nombre vaut 1
   		sommepremier=(sommepremier+(scorepremier[y]*10^puissance));
   		puissance=puissance-1;
   		y++; //Le curseur du tableau avance
   		
   	}
+  	print(puissance);
   	//TESTS DIFFERENTS
   	/*print(x);
   	println();
@@ -97,7 +101,7 @@ void main(){
   	/*println();
   	print(scoresecond[0]);
   	println();
-  	print(scoresecond[1]); --> Second tableau nickel */
+  	print(scoresecond[1]);*/
   	v=readNextCode();
     v=readNextCode();
     compteur=compteur+2; //On se trouve au début du mot, on ne l'incrémente plus
@@ -138,7 +142,7 @@ void main(){
   	/*print(scoretroisieme[0]);
   	println();
   	print(scoretroisieme[1]);
-  	println(); --> Troisieme tableau nickel */
+  	println();*/
   	v=readNextCode();
     v=readNextCode();
      x=0;
@@ -216,7 +220,6 @@ void main(){
   		compteur++;
   	}
   	//on a les 5 tableaux avec le code ascii de chaque chiffre du score affecté à une case.
-   //nommons TEMPORAIREMENT le score du joueur SCOREJOUEUR= 325.
    int scorejoueur= readInt("Score ?");
    /*int variable = 32;
 int dizaines = (variable/10)%10;
