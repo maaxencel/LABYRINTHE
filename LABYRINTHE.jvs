@@ -324,9 +324,9 @@ while(y!=19)
 }	
 int[][]labyrinthe() //Fonction qui crée le laby
 {
-	int[][]tab = new int[19][19];
-	int x=2;
-	int y=1;
+	int[][]tab = new int[19][19]; //Tableau qui contiendra les valeurs du laby
+	int x=2; 
+	int y=1;//On place le curseur juste après l'entrée, de manière à ne pas bloquer cette dernière
 	while(y!=19)
 	{
 		while(x!=19)
@@ -339,7 +339,7 @@ int[][]labyrinthe() //Fonction qui crée le laby
 	}
 	x=0;
 	y=0;
-	while(y!=1)
+	while(y!=1) //On remplit les bords de 1
 	{
 		while(x!=19)
 		{
@@ -351,7 +351,7 @@ int[][]labyrinthe() //Fonction qui crée le laby
 	}
 	x=0;
 	y=1;
-	while(y!=19)
+	while(y!=19) //Idem
 	{
 		tab[x][y]=1;
 		y++;
@@ -377,87 +377,87 @@ int[][]labyrinthe() //Fonction qui crée le laby
 	}
 	x=0;
 	y=0; 
-	double cplein=0;
-	double cvide=0;
-	double ctot=0;
+	int cplein=0; //Variables calculant le nombre de cases pleines
+	int cvide=0;//Et celui de cases vides
+	int ctot=0;
 	while(y!=19)
 	{
 		while(x!=19)
 		{
 			if(tab[x][y]==1)
 			{
-				cplein++;
+				cplein++; //On compte le nombre de cases pleines
 				ctot++;
 			}
 			if(tab[x][y]==0)
 			{
-				cvide++;
-				ctot++;
+				cvide++; //Et celui de cases vides
+				ctot++;//Compte, logiquement, le nombre de cases totales.
 			}
 			x++;
 		}
 		x=0;
 		y++;
 	}
-	ctot=ctot+2;
-	double probun = cvide/ctot;
+	ctot=ctot+2; //On ajoute les 2 cases qui ont été retirées au départ
+	double probun = cvide/ctot; //On en déduit la proba
 	double probdeux = cplein/ctot;
 	int memoire = 1;
 	int increment = 0;
 	int prob = 2;
 	double precedent= 0;
-	while(probdeux<0.6)
+	while(probdeux<0.6) //Tant que moins de 60 % des cases sont pleines
 	{
 		y=memoire;
-		x=random(prob,18);
+		x=random(prob,18); //On place une cases en x,y (y aléatoire).
 		if(increment ==0)
 		{
 		y++;
-		tab[x][y]=1;
+		tab[x][y]=1; //Mur aux coordonnées détérminées précédemment
 		increment ++;
 		}
 		if(increment==1)
 		{
-			if(tab[x][y]==0&&tab[x+1][y]==0)
+			if(tab[x][y]==0&&tab[x+1][y]==0) //Si deux cases voisines (en longueur), sont libres
 			{
-				tab[x][y+1]=1;
+				tab[x][y+1]=1; //La case au-dessus de la première est noircie.
 			}
-			if(tab[x][y]==0&&tab[x][y+1]==0)
+			if(tab[x][y]==0&&tab[x][y+1]==0)//Si deux cases voisines en hauteur cette fois.
 			{
-				tab[x+1][y]=1;
-				tab[x-1][y]=1;
-				tab[x][y-1]=1;
+				tab[x+1][y]=1; //Celle a droite..
+				tab[x-1][y]=1;//A gauche...
+				tab[x][y-1]=1;//Et en-dessous sont noircies.
 			}
-			if(tab[x][y]==0&&tab[x+1][y]==0&&tab[x][y+1]==0)
+			if(tab[x][y]==0&&tab[x+1][y]==0&&tab[x][y+1]==0)//Si la case à droite et celle au-dessus de celle dont on a le focus sont libres (en plus de celle dont on a le focus)
 			{
-				tab[x][y-1]=1;
-				tab[x+1][y]=1;
-				tab[x-1][y]=1;
+				tab[x][y-1]=1; //Celle du dessous
+				tab[x+1][y]=1;//A sa droite
+				tab[x-1][y]=1;//Et a sa gauche sont noircies
 			}
-			if(tab[x][y]==0&&tab[x-1][y]==0)
+			if(tab[x][y]==0&&tab[x-1][y]==0) //Si la case et celle à sa gauche sont libres
 			{
-				tab[x+1][y]=1;
-				tab[x][y+1]=1;
-				tab[x][y-1]=1;
+				tab[x+1][y]=1; //Celle a sa droite
+				tab[x][y+1]=1;//Au-dessus
+				tab[x][y-1]=1;//Et en-dessous sont noircies
 			}
-			if(tab[x][y]==0&&tab[x][y-1]==0)
+			if(tab[x][y]==0&&tab[x][y-1]==0) //Si celle dont on a le focus et celle en-dessous
 			{
-				tab[x-1][y]=1;
-				tab[x][y+1]=1;
-				tab[x+1][y]=1;
+				tab[x-1][y]=1; //Celle a sa gauche
+				tab[x][y+1]=1;//Au-dessus
+				tab[x+1][y]=1;//Et a sa droite sont noircies
 			}
 			y++;
-			if(y==18)
+			if(y==18)//Si on a atteint le haut du tableau
 			{
-				y=0;
+				y=0; //On recommence
 			}
-		}
+		}//Fin du while --> cplein >= 0,6
 		memoire = y;
 		cplein = 0;
 		cvide = 0;
 		ctot = 0;
 		x=0;
-		y=0;
+		y=0; //On procède à un second comptage
 		while(y!=19)
 	{
 		while(x!=19)
@@ -477,19 +477,20 @@ int[][]labyrinthe() //Fonction qui crée le laby
 		x=0;
 		y++;
 	}
-	probdeux = cplein/ctot;
-	if(precedent==probdeux)
-	{
-		prob++;
-		if(prob==17)
+	probdeux = cplein/ctot; 
+	if(precedent==probdeux) //Ce qui veut signifier que la quantité de cases pleines n'a pas varié en un tour
+	//A ce stade, on a "exploré" à fond la hauteur de x, avec x qui a varié
+	{//On recommence la même opération
+		prob++;//Sauf que l'intervalle de défintion de x est réduit par le bas
+		if(prob==17)//Jusqu'à avoir répété l'opération 17 fois
 		{
-			break;
+			break; //Alors on peut quitter cette phase
 		}
 	}
-	precedent = probdeux;
+	precedent = probdeux; //On sauvegarde la proba pour la comparer à la suivante
 	}
-	int chance = random (1,4);
-	if(chance==1)
+	int chance = random (1,4); //Choix "aléatoire" du mur à placer à côté de l'entrée
+	if(chance==1)//Cette partie est peu aléatoire car il ne faut surtout pas enfermer le joueur à l'entrée.
 	{
 		x=2;
 		y=1;
@@ -505,47 +506,47 @@ int[][]labyrinthe() //Fonction qui crée le laby
 		y=0;
 		// il y a déja un mur en ces coordonnées, donc il ne se passe rien, j'aurai aussi pu faire z=0 et tab[x][y]=Z
 	}
-	tab[x][y]=1;//debut : pas aléatoire, 3 choix, autant le faire separzement
+	tab[x][y]=1;//debut : pas aléatoire, 3 choix, autant le faire separement
 	x=1;
 	y=1;
 	//vérification de l'existence d'un chemin : pas de mur infranchissable.
-	
+	//SECONDE PHASE : PHASE DESTRUCTIVE
 	while(y!=18)
 	{
 		while(x!=18)
 		{
-			if(tab[x][y]==1&&tab[x+1][y]==1&&tab[x-1][y]==1&&tab[x][y+1]==1&&tab[x][y-1]==1&&x!=17)
+			if(tab[x][y]==1&&tab[x+1][y]==1&&tab[x-1][y]==1&&tab[x][y+1]==1&&tab[x][y-1]==1&&x!=17) //Si un certain enchaînement de mur se produit
 			{
-				tab[x+1][y]=0;
+				tab[x+1][y]=0;//On enlève un mur
 			}
 			if(tab[x][y]==1&&tab[x-1][y+1]==1&&tab[x+1][y-1]==1)
 			{
 				tab[x][y]=0;
-				tab[x-1][y]=1;
-				//tab[x+1][y]=1;
+				tab[x-1][y]=1;//On déplace le mur dans ce cas
 			}
 			x++;
 		}
 		x=1;
-		y++;
+		y++;//exploration intégrale du tableau
 	}
 	x=2;
 	y=1;
+	//TROISIEME PHASE SEMI DESTRUCTIVE
 	while(y!=17)
 	{
 	while(x!=18)
 	{
 			if(tab[x][y]==0&&tab[x+1][y]==0&&tab[x+2][y]==0&&tab[x-1][y+2]==0)
 			{
-				tab[x][y+1]=1;
+				tab[x][y+1]=1;//Ajout de mur
 			}
 			if(tab[x][y]==0&&tab[x+1][y]==0&&tab[x+1][y+1]==0&&tab[x-1][y+2]==0)
 			{
-				tab[x][y+1]=1;
+				tab[x][y+1]=1;//Idem
 			}
 			if(tab[x][y]==1&&tab[x-1][y+1]==1&&tab[x+1][y+1]==1)
 			{
-				tab[x][y]=0;
+				tab[x][y]=0;//Suppression de mur
 			}
 			x++;
 	}
@@ -558,7 +559,7 @@ int[][]labyrinthe() //Fonction qui crée le laby
 	int ouverture = 0;
 	while(x!=18)
 	{
-		while(y!=14)
+		while(y!=14) //14 car condition travaillant 4 cases plus loin que celle dont on a le focus.
 		{
 			if(tab[x][y]==1&&tab[x][y+1]==1&&tab[x][y+2]==1&&tab[x][y+3]==1&&ouverture!=3)
 			{
@@ -623,20 +624,6 @@ int[][]labyrinthe() //Fonction qui crée le laby
 		y=1;
 		x++;
 	}
-	//Enlever les étoiles pour printer le tableau du laby.
-		/*x=0;
-	y=0;
-	while(y!=19)
-	{
-		while(x!=19)
-		{
-			print(tab[x][y]);
-			x++;
-		}
-		println();
-		x=0;
-		y++;
-	}*/
 	tab[1][1]=2;//entree
 tab[17][17]=3;//sortie
 //Il faut  compliquer le laby, je vais donc fermer des issues.
@@ -745,6 +732,10 @@ while(x!=17)
 x=0;
 y=0;
 //reste plus que la vérification de l'entrée et de la sortie utillisable.
+//Chaque condition correspond à un cas de labyrinthe impossible
+//Qui nous est arrivés durant la phase post-création du laby.
+//Cette partie est donc moins 'méathématique'.
+//Puisque ce sont des coordonnées fixées.
 if(tab[1][2]==1&&tab[2][2]==1&&tab[3][2]==1&&tab[3][1]==1)
 {
 	tab[2][2]=0;
@@ -842,5 +833,19 @@ if(tab[3][2]==1&&tab[4][3]==1&&tab[2][2]==1&&tab[1][2]==1)
 {
 	tab[2][2]=0;
 }
+//Enlever les étoiles pour printer le tableau du laby.
+		/*x=0;
+	y=0;
+	while(y!=19)
+	{
+		while(x!=19)
+		{
+			print(tab[x][y]);
+			x++;
+		}
+		println();
+		x=0;
+		y++;
+	}*/
 		return(tab);
 }
