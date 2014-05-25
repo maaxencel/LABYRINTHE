@@ -287,9 +287,9 @@ while(curseur!=taille) //On aurait pu utiliser la variable puissance, mais ce ne
 	tabjoueur[curseur]=tabjoueur[curseur]+48; //Conversion en ascii relativement simple car 0 = 48 en ascii, on ajoute donc 48 au chiffre car les chiffres se 'suivent' sur la table de caractères ascii.
 	curseur++;
 }
-print(tabjoueur[0]);
+/*print(tabjoueur[0]);
 println();
-print(tabjoueur[1]);
+print(tabjoueur[1]);*/
 curseur=0;
 while(curseur<taille) //On obtient le score de la même manière que les 5 précédents
 {
@@ -297,6 +297,7 @@ while(curseur<taille) //On obtient le score de la même manière que les 5 précéde
   		puissance=puissance-1;
   		curseur++;
 }
+print(sommejoueur);
 //On a maintenant de quoi comparer les scores.
 closeFileReader();
 int s=0;
