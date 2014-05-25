@@ -303,7 +303,7 @@ if(scorejoueur>1000)
 int curseur=0;
 int sommejoueur=0;
 puissance=taille-1;
-puissancemem=puissance+1;
+puissancemem=puissance;
 while(curseur!=taille) //On aurait pu utiliser la variable puissance, mais ce ne serait pas logique.
 {
 	tabjoueur[curseur]=tabjoueur[curseur]+48; //Conversion en ascii relativement simple car 0 = 48 en ascii, on ajoute donc 48 au chiffre car les chiffres se 'suivent' sur la table de caractères ascii.
@@ -313,14 +313,14 @@ while(curseur!=taille) //On aurait pu utiliser la variable puissance, mais ce ne
 println();
 print(tabjoueur[1]);*/
 curseur=0;
-while(curseur<taille) //On obtient le score de la même manière que les 5 précédents
+while(curseur!=taille) //On obtient le score de la même manière que les 5 précédents
 {
 	sommejoueur=(sommejoueur+(tabjoueur[taille-(curseur+1)]*10^puissance));
   		puissance=puissance-1;
   		curseur++;
 }
 curseur=curseur-1;
-sommejoueur=(sommejoueur+((tabjoueur[taille-1]-48)*puissancemem)+48);
+//sommejoueur=sommejoueur+(tabjoueur[taille-1]*puissancemem);
 //On a maintenant de quoi comparer les scores.
 closeFileReader();
 int s=0;
