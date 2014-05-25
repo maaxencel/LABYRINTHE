@@ -186,7 +186,7 @@ void main(){
      v=readNextCode();
      x++;
      compteur++;
-   while(v!=13)
+   while(v!=-1)
    {
    	v=readNextCode();
    	x++;
@@ -200,12 +200,11 @@ void main(){
   	d=0;
   	puissance=x-1;
   	int sommecinquieme=0;
-  	while(d!=compteur-5)
+  	while(d!=compteur-4)
   	{
   		v=readNextCode();
   		d++;
   	}
-  	print(v);
   	int curseurcinquieme=d+1;
   	while(y<x)
   	{
@@ -260,7 +259,7 @@ if(scorejoueur<10)
 {
 	tabjoueur[0]=unite;
 }
-if(scorejoueur>=100&&scorejoueur<1000)
+if(scorejoueur>=10&&scorejoueur<100)
 {
 	tabjoueur[0]=unite;
 	tabjoueur[1]=diz;
@@ -288,13 +287,17 @@ while(curseur!=taille) //On aurait pu utiliser la variable puissance, mais ce ne
 	tabjoueur[curseur]=tabjoueur[curseur]+48; //Conversion en ascii relativement simple car 0 = 48 en ascii, on ajoute donc 48 au chiffre car les chiffres se 'suivent' sur la table de caractères ascii.
 	curseur++;
 }
-curseur=0;
+/*print(tabjoueur[0]);
+println();
+print(tabjoueur[1]);
+curseur=0;*/
 while(curseur<taille) //On obtient le score de la même manière que les 5 précédents
 {
 	sommejoueur=(sommejoueur+(tabjoueur[curseur]*10^puissance));
   		puissance=puissance-1;
   		curseur++;
 }
+print(sommejoueur);
 //On a maintenant de quoi comparer les scores.
 closeFileReader();
 int s=0;
